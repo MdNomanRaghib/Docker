@@ -1,0 +1,121 @@
+------
+Docker
+------
+
+- Open source platform to build, run and manage containers.
+- Containerization is the process of packaging an application and all it's dependencies into a container image.
+- With a simple "docker run" command, a container image is downloaded, and the app within is started.
+
+---------------
+Docker commands
+---------------
+
+=> docker run centos - will run centos container locally. If not present it will first download centos image from docker hub and then it gets exited immediately.
+
+=> docker run centos --name container_name - Creates a container with a specific name
+
+=> docker run -it centos bash - will run bash command inside centos container and -it is used to directly log in.
+
+=> docker run -d ubuntu sleep 100 - runs ubuntu container for 100 seconds in background or in detach mode.
+
+=> docker attach ubuntu - runs ubuntu container in foreground. If -d is used in last docker run, then using this command ubuntu will run in foreground.
+
+=> docker run timer - timer is an image. This command will print time each second continuously.
+   
+=> docker ps - lists all running containers
+
+=> docker ps -a - lists all stopped and running containers.
+
+=> docker stop container_name/id - stops or kills the container.
+
+=> docker rm container_id/name - removes container and disk cleaned.
+
+=> docker rm 361 0e0 1d2 - removes multiple container whose container id starts with 361 0e0 1d2
+
+=> docker rename old_name new_name - Change the name of running/stopped container.
+
+=> docker images - to see all the images
+
+=> docker rmi image_name - to remove image
+
+	Note: To delete an image we need to remove all dependent containers and then the image.
+
+=> docker pull ubuntu - pulls image and stores it locally but not running it.
+
+=> docker exec container_id cat /etc/*release* - executes command on a running container.
+
+=> docker run -d --name webapp nginx:1.14-alpine - Creating a container with a specific name.
+
+----------
+Docker Run
+----------
+
+=> docker run redis - Will run a container with redis service (By default the version is latest)
+
+=> docker run redis:4.0 cat /etc/*release* - Will run a container with redis service 4.0 version and cat command will display the version details
+
+=> docker run kodekloud/simple-prompt-docker - Will run the container and display the desired output with no prompt/giving input while execution if present in codes application.
+
+=> docker run -i kodekloud/simple-prompt-docker - Will ask for an input and then give desired output but prompt won't come if present in code.
+
+=> docker run -it kodekloud/simple-prompt-docker - Will ask for an input alongwith prompt.
+
+	Docker Host/ Docker Engine - Host where docker is installed.
+	Every container is assigned an IP.
+
+=> docker run --name mysql-db -e "MYSQL_ROOT_PASSWORD=db_pass123" MySQL - Deploying a database with name mysql-db, setting password to db_pass123
+
+Port Mapping:
+-------------
+=> docker run -p 80:5000 kodekloud/webapp - It maps port 80 of docker host to port 5000 of docker container. Container must be in stop state for mapping.
+   Ex: docker run -p 8080:8080 jenkins (Maps ports of container and docker host)
+
+	We can access the application from within docker host using IP and port of container.
+	From outside the docker host, we have to use IP of docker host and port of docker host which is mapped to port of the container having the application.
+
+Volume mapping:
+---------------
+=> docker run -v /opt/datadir:/var/lib/mysql mysql - the data of mysql container will be stored to /opt/datadir on docker host which is mapped to /var/lib/mysql directory inside the container.
+   Ex: docker run -p 8080:8080 -v /root/my-jenkins-data:/var/jenkins_home -u root jenkins
+       The above command will run jenkins and store data locally in docker host inside /root/my-jenkins-data directory for root user. If we don't store data and use docker run jenkins again then a fresh jenkins container will start with default configuration and data.
+
+=> docker inspect container_name/comtainer_id - To view full details of container in JSON format. In case of jenkins image, it also displays its IP.
+
+=> docker logs container_name/comtainer_id - To view logs of the container.
+
+-------------
+Docker Images
+-------------
+
+Demo Docker file for python flask application
+---------------------------------------------
+
+=> docker history image_name - To see history of an image
+
+FROM ubuntu
+
+RUN apt-get update
+RUN apt-get install -y python python-pip
+RUN pip install flask
+
+COPY app.py /opt/app.py
+
+ENTRYPOINT FLASK_APP=/opt/app.py flask run --host=0.0.0.0
+
+=> Run "docker build . -t account_name/my-simple-webapp" (Create a docker image by using docker file with a tag accont_name/my-simple-webapp)
+
+Note: All layers in docker build is cached so after failure or updating the code, only layer involved is rebuild and rest layers above it will be re-used from cache. This makes rebuilding of image faster.
+
+=> docker login (to login to docker hub account from terminal)
+
+=> Run "docker push account_name/my-simple-webapp" (Pushing docker image to docker hub inside an account)
+
+=> docker build . -t webapp-color:lite (Building an image from DockerFile and giving name and tag to it)
+
+=> CMD sleep 5 or CMD ["sleep","5"] - If specified inside docker file, it will run a command sleep 5
+
+=> ENTRYPOINT["sleep"] - sleep command will run along with argument specified with docker run command.
+
+=> If CMD["10"] is specified below ENTRYPOINT in docker file, sleep 10 command will run if no argument is provided with docker run command.
+
+=> docker run --entrypoint sleep2.0 ubuntu-sleeper 10 - (To use another entrypoint command rather than what is specified in docker file)
