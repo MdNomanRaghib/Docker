@@ -119,3 +119,20 @@ Note: All layers in docker build is cached so after failure or updating the code
 => If CMD["10"] is specified below ENTRYPOINT in docker file, sleep 10 command will run if no argument is provided with docker run command.
 
 => docker run --entrypoint sleep2.0 ubuntu-sleeper 10 - (To use another entrypoint command rather than what is specified in docker file)
+
+Docker Engine:
+
+=> Has 3 components - Docker Daemon, Rest API, Docker CLI.
+
+=> Docker Daemon is background process which manages docker objects such as containers, images, volumes and network.
+
+=> Docker Rest API server is API interface that programs can use and talk to Daemon and provide instructions.
+
+=> Docker CLI uses Rest API to talk to Docker Daemon.
+
+=> To run a docker container based on nginx on a remote Docker host:
+	docker -H=10.123.2.1:2375 run nginx
+
+=> Docker uses cgroups(control groups) to restrict amount of hardware of underlying host a container uses.
+	docker run --cpus=.5 ubuntu (Restricts to 50 percent of CPU usage)
+	docker run --memory=100m ubuntu (Restricts to 100 mb of memory usage)
