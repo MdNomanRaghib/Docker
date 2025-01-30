@@ -136,3 +136,24 @@ Docker Engine:
 => Docker uses cgroups(control groups) to restrict amount of hardware of underlying host a container uses.
 	docker run --cpus=.5 ubuntu (Restricts to 50 percent of CPU usage)
 	docker run --memory=100m ubuntu (Restricts to 100 mb of memory usage)
+
+=> /var/lib/docker is created when docker is installed(aufs, containers, image, volumes etc.) are sub-directories.
+
+=> Each line of a docker file creates a new layer. Each layer stores only the changes from the previous layer. If different docker file has same instructions, docker uses layers from cache and do not create any new layer hence saving disk space and building images faster.
+
+=> Layers created from docker build called image layers are read-only. After using docker run to create a container, a new layer called container layer is created on top of image layer which is Read-Write. This layers contains data created by containers like log files, temp files etc. Life of this layer is only as long as the container is alive. A copy of source code is created and placed in container layer and all modifications are done in container layer.
+
+=> docker volume create data_volume (Creates a directory inside /var/lib/docker/volumes)
+
+Mount volume:
+=> docker run -v data_volume:/var/lib/MySQL MySQL (If data_volume is not already created, it will create and then mount).
+Bind volume:
+=> docker run -v /data/MySQL:/var/lib/MySQL MySQL
+Mount volume mounts volumes created inside /var/lib/docker/volumes directory and Bind volume binds volume present elsewhere.
+
+=> New way of command:
+docker run \
+--mount type=bind,source=/data/MySQL,target=/var/lib/MySQL MySQL (source is location inside host and target is location inside container).
+
+Storage drivers: Docker uses storage drivers to enable layered architecture. Ex: AUFS, Device Mapper, ZFS etc.
+It maintains layered architecture, creating writable layer, moving files across layers to enable copy write etc.
