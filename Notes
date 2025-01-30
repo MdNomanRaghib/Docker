@@ -160,3 +160,11 @@ It maintains layered architecture, creating writable layer, moving files across 
 
 File inside containers folder is created with the same name as container id.
 
+Docker network:
+docker network ls - To list all docker networks existing on the system.
+docker network inspect bridge - To inspect bridge network.
+docker run --name alpine-2 --network=none alpine - To run a container based on alpine image on none network.
+
+Create a new network named wp-mysql-network using the bridge driver. Allocate subnet 182.18.0.0/24. Configure Gateway 182.18.0.1:
+docker network create --driver bridge --subnet 182.18.0.0/24 --gateway 182.18.0.1 wp-mysql-network
+
