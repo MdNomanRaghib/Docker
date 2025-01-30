@@ -157,3 +157,6 @@ docker run \
 
 Storage drivers: Docker uses storage drivers to enable layered architecture. Ex: AUFS, Device Mapper, ZFS etc.
 It maintains layered architecture, creating writable layer, moving files across layers to enable copy write etc.
+
+File inside containers folder is created with the same name as container id.
+
